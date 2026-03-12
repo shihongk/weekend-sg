@@ -267,3 +267,25 @@ main {
         padding: var(--spacing-md);
     }
 }
+
+
+/* Footer Styles */
+.site-footer {
+    background-color: var(--color-background-light);
+    border-top: 1px solid var(--color-border);
+    padding: var(--spacing-lg) var(--spacing-md);
+    text-align: center;
+    margin-top: var(--spacing-xxl);
+}
+
+.site-footer p {
+    color: var(--color-text-light);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+@media print {
+    .site-footer {
+        display: none;
+    }
+}
