@@ -1,0 +1,301 @@
+/* Singapore Map Styles */
+.map-wrapper {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.singapore-map {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Region Buttons */
+.region-buttons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.region-button {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid transparent;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    pointer-events: all;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    min-width: 100px;
+    text-align: center;
+}
+
+.region-button__label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-text);
+}
+
+.region-button__count {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    font-weight: 500;
+}
+
+/* Region Button Positions */
+.region-button--central {
+    top: 68%;
+    left: 48%;
+    transform: translate(-50%, -50%);
+}
+
+.region-button--north {
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.region-button--northeast {
+    top: 35%;
+    left: 70%;
+    transform: translate(-50%, -50%);
+}
+
+.region-button--east {
+    top: 55%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+}
+
+.region-button--west {
+    top: 60%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+}
+
+/* Region Button Colors (matching but distinct from chips) */
+.region-button--central {
+    border-color: rgba(255, 107, 107, 0.3);
+    background: rgba(255, 107, 107, 0.05);
+}
+
+.region-button--central:hover {
+    border-color: var(--color-primary);
+    background: rgba(255, 107, 107, 0.15);
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 8px 30px rgba(255, 107, 107, 0.3);
+}
+
+.region-button--north {
+    border-color: rgba(52, 152, 219, 0.3);
+    background: rgba(52, 152, 219, 0.05);
+}
+
+.region-button--north:hover {
+    border-color: #3498db;
+    background: rgba(52, 152, 219, 0.15);
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 8px 30px rgba(52, 152, 219, 0.3);
+}
+
+.region-button--northeast {
+    border-color: rgba(155, 89, 182, 0.3);
+    background: rgba(155, 89, 182, 0.05);
+}
+
+.region-button--northeast:hover {
+    border-color: #9b59b6;
+    background: rgba(155, 89, 182, 0.15);
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 8px 30px rgba(155, 89, 182, 0.3);
+}
+
+.region-button--east {
+    border-color: rgba(255, 140, 140, 0.3);
+    background: rgba(255, 140, 140, 0.05);
+}
+
+.region-button--east:hover {
+    border-color: #ff8c8c;
+    background: rgba(255, 140, 140, 0.15);
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 8px 30px rgba(255, 140, 140, 0.3);
+}
+
+.region-button--west {
+    border-color: rgba(144, 238, 144, 0.3);
+    background: rgba(144, 238, 144, 0.05);
+}
+
+.region-button--west:hover {
+    border-color: #90ee90;
+    background: rgba(144, 238, 144, 0.15);
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 8px 30px rgba(144, 238, 144, 0.3);
+}
+
+/* Active state when region is selected */
+.region-button.active {
+    transform: translate(-50%, -50%) scale(1.1);
+    z-index: 10;
+}
+
+.region-button--central.active {
+    border-color: var(--color-primary);
+    background: rgba(255, 107, 107, 0.2);
+    box-shadow: 0 12px 40px rgba(255, 107, 107, 0.4);
+}
+
+.region-button--north.active {
+    border-color: #3498db;
+    background: rgba(52, 152, 219, 0.2);
+    box-shadow: 0 12px 40px rgba(52, 152, 219, 0.4);
+}
+
+.region-button--northeast.active {
+    border-color: #9b59b6;
+    background: rgba(155, 89, 182, 0.2);
+    box-shadow: 0 12px 40px rgba(155, 89, 182, 0.4);
+}
+
+.region-button--east.active {
+    border-color: #ff8c8c;
+    background: rgba(255, 140, 140, 0.2);
+    box-shadow: 0 12px 40px rgba(255, 140, 140, 0.4);
+}
+
+.region-button--west.active {
+    border-color: #90ee90;
+    background: rgba(144, 238, 144, 0.2);
+    box-shadow: 0 12px 40px rgba(144, 238, 144, 0.4);
+}
+
+/* Responsive map */
+@media (max-width: 768px) {
+    .map-wrapper {
+        height: 350px;
+    }
+    
+    .region-button {
+        min-width: 80px;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    .region-button__label {
+        font-size: 0.8rem;
+    }
+    
+    .region-button__count {
+        font-size: 0.7rem;
+    }
+}
+
+
+/* Recommended Places Section */
+.recommended-places {
+  margin-top: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.recommended-places h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2C3E50;
+  margin: 0 0 16px 0;
+}
+
+.recommended-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recommended-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: #F8F9FA;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.recommended-item:hover {
+  background: #E9ECEF;
+  transform: translateX(4px);
+}
+
+.recommended-item__number {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.recommended-item__content {
+  flex: 1;
+}
+
+.recommended-item__name {
+  font-weight: 600;
+  color: #2C3E50;
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.recommended-item__description {
+  font-size: 13px;
+  color: #7F8C8D;
+  line-height: 1.4;
+}
+
+.recommended-item__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.recommended-item__tag {
+  padding: 3px 8px;
+  background: white;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #667EEA;
+  font-weight: 500;
+}

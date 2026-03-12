@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plan your perfect Singapore weekend with personalized itineraries featuring nature, culture, food, and hidden gems.">
+    <title>weekend.sg - Your Singapore Weekend Planner</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/map.css">
+    <link rel="stylesheet" href="styles/print.css" media="print">
+</head>
+<body>
+    <header>
+        <h1>weekend.sg</h1>
+        <p>Plan your perfect Singapore weekend</p>
+    </header>
+
+    <main>
+        <aside class="preference-panel">
+            <!-- Section A: Duration Selector -->
+            <section class="preference-section">
+                <h2>How long?</h2>
+                <div class="duration-selector">
+                    <div class="duration-card" data-value="half-day">
+                        <div class="duration-card__icon">⏰</div>
+                        <div class="duration-card__label">Half day</div>
+                        <div class="duration-card__subtitle">2–3 stops</div>
+                    </div>
+                    <div class="duration-card" data-value="1-day">
+                        <div class="duration-card__icon">📅</div>
+                        <div class="duration-card__label">1 day</div>
+                        <div class="duration-card__subtitle">4–5 stops</div>
+                    </div>
+                    <div class="duration-card" data-value="2-days">
+                        <div class="duration-card__icon">🗓️</div>
+                        <div class="duration-card__label">2 days</div>
+                        <div class="duration-card__subtitle">6–8 stops</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section B: Region Selector -->
+            <section class="preference-section">
+                <h2>Where you plan to visit?</h2>
+                <div class="region-selector">
+                    <button class="chip chip--multi" data-value="central">Central</button>
+                    <button class="chip chip--multi" data-value="north">North</button>
+                    <button class="chip chip--multi" data-value="east">East</button>
+                    <button class="chip chip--multi" data-value="west">West</button>
+                    <button class="chip chip--multi" data-value="northeast">Northeast</button>
+                </div>
+            </section>
+
+            <!-- Section C: Profile Selector -->
+            <section class="preference-section">
+                <h2>Who's going?</h2>
+                <div class="profile-selector">
+                    <div class="profile-card" data-value="solo">
+                        <div class="profile-card__icon">🧳</div>
+                        <div class="profile-card__title">Solo</div>
+                    </div>
+                    <div class="profile-card" data-value="couple">
+                        <div class="profile-card__icon">❤️</div>
+                        <div class="profile-card__title">Couple</div>
+                    </div>
+                    <div class="profile-card" data-value="family-young-kids">
+                        <div class="profile-card__icon">🎈</div>
+                        <div class="profile-card__title">Family (young kids)</div>
+                    </div>
+                    <div class="profile-card" data-value="family-teens">
+                        <div class="profile-card__icon">🎒</div>
+                        <div class="profile-card__title">Family (teens)</div>
+                    </div>
+                    <div class="profile-card" data-value="group-friends">
+                        <div class="profile-card__icon">🎉</div>
+                        <div class="profile-card__title">Friends</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section D: Activity Selector -->
+            <section class="preference-section">
+                <h2>What you like?</h2>
+                <div class="activity-selector">
+                    <button class="chip chip--multi" data-value="nature-parks">Nature</button>
+                    <button class="chip chip--multi" data-value="physical">Active</button>
+                    <button class="chip chip--multi" data-value="culture">Culture</button>
+                    <button class="chip chip--multi" data-value="art">Art</button>
+                    <button class="chip chip--multi" data-value="museums">Museums</button>
+                    <button class="chip chip--multi" data-value="sustainability">Eco</button>
+                    <button class="chip chip--multi" data-value="history">History</button>
+                    <button class="chip chip--multi" data-value="heritage">Heritage</button>
+                    <button class="chip chip--multi" data-value="local_food">Food</button>
+                    <button class="chip chip--multi" data-value="hidden">Hidden gems</button>
+                </div>
+            </section>
+
+            <!-- Section E: Weather Selector -->
+            <section class="preference-section">
+                <h2>Weather preference?</h2>
+                <div class="weather-selector segmented-control">
+                    <button class="segmented-control__option" data-value="anything" data-selected="true">
+                        <span class="option-icon">☀️</span>
+                        <span class="option-label">Any</span>
+                    </button>
+                    <button class="segmented-control__option" data-value="indoor">
+                        <span class="option-icon">🏬</span>
+                        <span class="option-label">Indoor</span>
+                    </button>
+                    <button class="segmented-control__option" data-value="short-outdoor">
+                        <span class="option-icon">🌤️</span>
+                        <span class="option-label">Mixed</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Generate Button -->
+            <button class="generate-button" id="generate-button">Plan my weekend</button>
+        </aside>
+
+        <section class="map-container" style="position: relative;">
+            <h2>Singapore</h2>
+            <p style="font-size: 14px; color: #7F8C8D; margin-bottom: 16px;">Click on regions to see top places</p>
+            <div class="map-wrapper">
+                <!-- Background map image -->
+                <img src="assets/Singapore Map.png?v=2" alt="Singapore Map" class="singapore-map">
+                
+                <!-- Interactive Region Buttons -->
+                <div class="region-buttons">
+                    <!-- Central Region -->
+                    <button class="region-button region-button--central" data-region="central">
+                        <span class="region-button__label">Central</span>
+                        <span class="region-button__count" id="central-count">Loading...</span>
+                    </button>
+                    
+                    <!-- North Region -->
+                    <button class="region-button region-button--north" data-region="north">
+                        <span class="region-button__label">North</span>
+                        <span class="region-button__count" id="north-count">Loading...</span>
+                    </button>
+                    
+                    <!-- Northeast Region -->
+                    <button class="region-button region-button--northeast" data-region="northeast">
+                        <span class="region-button__label">Northeast</span>
+                        <span class="region-button__count" id="northeast-count">Loading...</span>
+                    </button>
+                    
+                    <!-- East Region -->
+                    <button class="region-button region-button--east" data-region="east">
+                        <span class="region-button__label">East</span>
+                        <span class="region-button__count" id="east-count">Loading...</span>
+                    </button>
+                    
+                    <!-- West Region -->
+                    <button class="region-button region-button--west" data-region="west">
+                        <span class="region-button__label">West</span>
+                        <span class="region-button__count" id="west-count">Loading...</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Recommended Places Section -->
+            <div id="recommended-places" class="recommended-places" style="display: none;">
+                <h3 id="recommended-title">Top Places</h3>
+                <div id="recommended-list" class="recommended-list"></div>
+            </div>
+        </section>
+
+        <section class="results-area">
+            <!-- Results will be dynamically rendered here -->
+        </section>
+    </main>
+
+    <div id="mobile-summary" class="mobile-summary hidden">
+        <!-- Mobile summary view will be added in later phase -->
+    </div>
+
+    <script type="module" src="scripts/main.js"></script>
+</body>
+</html>

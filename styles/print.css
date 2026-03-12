@@ -1,0 +1,115 @@
+/**
+ * Print Stylesheet for weekend.sg
+ * Optimized for printing itineraries
+ */
+
+@media print {
+  /* Hide interactive elements */
+  .preference-panel,
+  .map-container,
+  .save-button,
+  #generate-button,
+  .regenerate-without-visited-container,
+  .manage-exclusions-button {
+    display: none !important;
+  }
+
+  /* Reset page margins */
+  @page {
+    margin: 1cm;
+  }
+
+  body {
+    background: white;
+    color: black;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  /* Results area takes full width */
+  .results-area {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+  }
+
+  /* Rationale styling */
+  .rationale {
+    background: white;
+    border-left: 3px solid black;
+    padding: 10pt;
+    margin-bottom: 15pt;
+    page-break-inside: avoid;
+  }
+
+  .rationale h3 {
+    color: black;
+    font-size: 14pt;
+    margin-bottom: 8pt;
+  }
+
+  .rationale p {
+    color: black;
+    font-size: 11pt;
+  }
+
+  /* Itinerary styling */
+  .itinerary h3,
+  .day-section h4 {
+    color: black;
+    font-size: 13pt;
+    margin-top: 15pt;
+    margin-bottom: 10pt;
+    page-break-after: avoid;
+  }
+
+  /* Location cards */
+  .location-card {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10pt;
+    margin-bottom: 10pt;
+    page-break-inside: avoid;
+  }
+
+  .location-card::before {
+    color: black;
+  }
+
+  .location-card__name {
+    color: black;
+    font-size: 12pt;
+    font-weight: bold;
+  }
+
+  .location-card__region-badge {
+    border: 1px solid #666;
+    color: #666;
+    background: white;
+  }
+
+  .location-card__description {
+    color: #333;
+    font-size: 10pt;
+    margin-top: 5pt;
+  }
+
+  /* Tags/chips */
+  .location-card__tags .chip {
+    border: 1px solid #999;
+    background: white;
+    color: #666;
+    font-size: 9pt;
+  }
+
+  /* Prevent orphans */
+  h3, h4 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  p {
+    orphans: 2;
+    widows: 2;
+  }
+}
