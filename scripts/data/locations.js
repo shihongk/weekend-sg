@@ -1603,5 +1603,21 @@ export const locations = [
       'biodiversity hotspot'
     ],
     coordinates: { x: 260, y: 220 }
+  },
+  {
+    id: 'singapore_discovery_centre',
+    name: 'Singapore Discovery Centre',
+    region: 'west',
+    tags: ['museums', 'history', 'heritage', 'sustainability'],
+    weather_suitability: 'short-outdoor',
+    compatible_profiles: ['family-young-kids', 'family-teens', 'couple', 'solo', 'group-friends'],
+    duration_options: ['half-day', '1-day'],
+    description: 'Interactive museum exploring Singapore\'s history, defence, and future through immersive exhibits and outdoor activities.',
+    rationale_hints: [
+      'interactive history exhibits',
+      'Singapore defence heritage',
+      'family-friendly learning experience'
+    ],
+    coordinates: { x: 190, y: 310 }
   }
 ];
