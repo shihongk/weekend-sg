@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Weekend.sg</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; }
+        button { margin: 5px; padding: 10px 15px; }
+    </style>
+</head>
+<body>
+    <h1>Debug Weekend.sg</h1>
+    
+    <div class="debug-section">
+        <h2>Step-by-Step Debug</h2>
+        <button onclick="step1()">Step 1: Load Data</button>
+        <button onclick="step2()">Step 2: Test Basic Engine</button>
+        <button onclick="step3()">Step 3: Test Enhanced Engine</button>
+        <button onclick="step4()">Step 4: Test Selection Interface</button>
+        <button onclick="step5()">Step 5: Full Integration Test</button>
+    </div>
+
+    <div id="debug-output"></div>
+
+    <script type="module">
+        import { PreferenceManager } from './scripts/ui/preferences.js';
+        import { RecommendationEngine } from './scripts/engine/recommender.js';
+        import { EnhancedRecommendationEngine } from './scripts/engine/enhanced-recommender.js';
+        import { LocationSelectionManager } from './scripts/ui/location-selection.js';
+        import { ResultsRenderer } from './scripts/ui/results.js';
+        import { locations } from './scripts/data/locations.js';
+
+        const output = document.getElementById('debug-output');
+
+        function log(message) {
+            const div = document.createElement('div');
+            div.className = 'result';
+            div.innerHTML = message;
+            output.appendChild(div);
+            console.log(message);
+        }
+
+        function clear() {
+            output.innerHTML = '';
+        }
+
+        // Step 1: Load Data
+        window.step1 = function() {
+            clear();
+            log(`<strong>Step 1: Data Loading</strong>`);
+            log(`Total locations: ${locations.length}`);
+            
+            if (locations.length > 0) {
+                const sample = locations[0];
+                log(`Sample location: ${sample.name}`);
+                log(`Sample region: ${sample.region}`);
+                log(`Sample tags: ${JSON.stringify(sample.tags)}`);
+                log(`Sample profiles: ${JSON.stringify(sample.compatible_profiles)}`);
+                log(`Sample weather: ${sample.weather_suitability}`);
+                log(`✅ Data loaded successfully`);
+            } else {
+                log(`❌ No locations loaded!`);
+            }
+        };
+
+        // Step 2: Test Basic Engine
+        window.step2 = function() {
+            clear();
+            log(`<strong>Step 2: Basic Recommendation Engine</strong>`);
+            
+            try {
+                const engine = new RecommendationEngine(locations);
+                
+                const testPrefs = {
+                    duration: '1-day',
+                    profile: 'couple',
+                    regions: ['central'],
+                    activities: ['culture'],
+                    weather: 'anything'
+                };
+                
+                log(`Test preferences: ${JSON.stringify(testPrefs)}`);
+                
+                // Test each step
+                const step1 = engine.filterByProfile(testPrefs.profile);
+                log(`After profile filter: ${step1.length} locations`);
+                
+                const step2 = engine.filterByWeather(step1, testPrefs.weather);
+                log(`After weather filter: ${step2.length} locations`);
+                
+                const step3 = engine.filterByRegions(step2, testPrefs.regions);
+                log(`After region filter: ${step3.length} locations`);
+                
+                const step4 = engine.scoreByActivities(step3, testPrefs.activities);
+                log(`After activity scoring: ${step4.length} locations`);
+                
+                const final = engine.generateItinerary(testPrefs);
+                log(`Final itinerary: ${final.length} locations`);
+                
+                if (final.length > 0) {
+                    log(`First location: ${final[0].name} (score: ${final[0].score || 'N/A'})`);
+                    log(`✅ Basic engine working`);
+                } else {
+                    log(`❌ Basic engine returned no results`);
+                }
+                
+            } catch (error) {
+                log(`❌ Basic engine error: ${error.message}`);
+                console.error(error);
+            }
+        };
+
+        // Step 3: Test Enhanced Engine
+        window.step3 = function() {
+            clear();
+            log(`<strong>Step 3: Enhanced Recommendation Engine</strong>`);
+            
+            try {
+                const selectionManager = new LocationSelectionManager();
+                const engine = new EnhancedRecommendationEngine(locations, selectionManager);
+                
+                const testPrefs = {
+                    duration: '1-day',
+                    profile: 'couple',
+                    regions: ['central'],
+                    activities: ['culture'],
+                    weather: 'anything'
+                };
+                
+                log(`Test preferences: ${JSON.stringify(testPrefs)}`);
+                
+                const result = engine.generateEnhancedItinerary(testPrefs);
+                log(`Enhanced result type: ${result.type}`);
+                log(`Enhanced result: ${JSON.stringify(result, null, 2)}`);
+                
+                if (result.type === 'selection_required') {
+                    log(`✅ Enhanced engine working - selection required`);
+                } else if (result.type === 'standard') {
+                    log(`✅ Enhanced engine working - standard result`);
+                } else {
+                    log(`❌ Unexpected result type: ${result.type}`);
+                }
+                
+            } catch (error) {
+                log(`❌ Enhanced engine error: ${error.message}`);
+                console.error(error);
+            }
+        };
+
+        // Step 4: Test Selection Interface
+        window.step4 = function() {
+            clear();
+            log(`<strong>Step 4: Selection Interface</strong>`);
+            
+            try {
+                const selectionManager = new LocationSelectionManager();
+                
+                // Create a test results area
+                let testArea = document.getElementById('test-results-area');
+                if (!testArea) {
+                    testArea = document.createElement('div');
+                    testArea.id = 'test-results-area';
+                    testArea.className = 'results-area';
+                    document.body.appendChild(testArea);
+                }
+                
+                const testMatches = locations.slice(0, 10);
+                const testPrefs = { duration: '1-day' };
+                const limit = 4;
+                
+                log(`Testing selection interface with ${testMatches.length} matches, limit ${limit}`);
+                
+                selectionManager.showLocationSelection(testMatches, testPrefs, limit);
+                
+                // Check if interface was created
+                const selectionContainer = document.querySelector('.location-selection-container');
+                if (selectionContainer) {
+                    log(`✅ Selection interface created successfully`);
+                    log(`Interface has ${selectionContainer.children.length} child elements`);
+                } else {
+                    log(`❌ Selection interface not created`);
+                }
+                
+            } catch (error) {
+                log(`❌ Selection interface error: ${error.message}`);
+                console.error(error);
+            }
+        };
+
+        // Step 5: Full Integration Test
+        window.step5 = function() {
+            clear();
+            log(`<strong>Step 5: Full Integration Test</strong>`);
+            
+            try {
+                // Simulate the exact flow from main.js
+                const preferenceManager = new PreferenceManager();
+                const locationSelectionManager = new LocationSelectionManager();
+                const recommendationEngine = new EnhancedRecommendationEngine(locations, locationSelectionManager);
+                
+                // Set up test preferences (simulate user selections)
+                preferenceManager.setDuration('1-day');
+                preferenceManager.setProfile('couple');
+                preferenceManager.toggleRegion('central');
+                preferenceManager.toggleActivity('culture');
+                
+                const preferences = preferenceManager.getPreferences();
+                log(`Full test preferences: ${JSON.stringify(preferences)}`);
+                
+                // Test validation
+                const isValid = preferenceManager.isValid();
+                log(`Preferences valid: ${isValid}`);
+                
+                if (isValid) {
+                    const result = recommendationEngine.generateEnhancedItinerary(preferences);
+                    log(`Full integration result: ${JSON.stringify(result, null, 2)}`);
+                    
+                    if (result.type === 'selection_required') {
+                        log(`✅ Full integration working - would show selection interface`);
+                    } else if (result.type === 'standard') {
+                        log(`✅ Full integration working - would show standard results`);
+                    } else {
+                        log(`❌ Full integration issue: ${result.type}`);
+                    }
+                } else {
+                    log(`❌ Preferences not valid`);
+                }
+                
+            } catch (error) {
+                log(`❌ Full integration error: ${error.message}`);
+                console.error(error);
+            }
+        };
+
+        // Auto-run step 1 on load
+        window.addEventListener('load', () => {
+            step1();
+        });
+    </script>
+</body>
+</html>

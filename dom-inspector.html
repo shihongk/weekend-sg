@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOM Inspector</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .inspector { background: #f5f5f5; padding: 15px; margin: 10px 0; }
+        button { margin: 5px; padding: 10px 15px; }
+    </style>
+</head>
+<body>
+    <h1>DOM Inspector</h1>
+    
+    <button onclick="inspectResultsArea()">Inspect Results Area</button>
+    <button onclick="findSelectionContainer()">Find Selection Container</button>
+    <button onclick="checkAllContainers()">Check All Containers</button>
+    
+    <div class="inspector" id="output"></div>
+    
+    <script>
+        function log(msg) {
+            document.getElementById('output').innerHTML += '<div>' + msg + '</div>';
+        }
+        
+        function clear() {
+            document.getElementById('output').innerHTML = '';
+        }
+        
+        window.inspectResultsArea = function() {
+            clear();
+            log('=== Inspecting Results Area ===');
+            
+            const resultsArea = document.querySelector('.results-area');
+            if (resultsArea) {
+                log('✓ Results area found');
+                log('Class list: ' + Array.from(resultsArea.classList).join(', '));
+                log('Children count: ' + resultsArea.children.length);
+                log('Inner HTML length: ' + resultsArea.innerHTML.length);
+                log('Display style: ' + getComputedStyle(resultsArea).display);
+                log('Visibility: ' + getComputedStyle(resultsArea).visibility);
+                log('Opacity: ' + getComputedStyle(resultsArea).opacity);
+                
+                if (resultsArea.children.length > 0) {
+                    log('First child: ' + resultsArea.children[0].tagName + ' (' + resultsArea.children[0].className + ')');
+                }
+            } else {
+                log('❌ Results area not found');
+            }
+        };
+        
+        window.findSelectionContainer = function() {
+            clear();
+            log('=== Finding Selection Container ===');
+            
+            const selectionContainer = document.querySelector('.location-selection-container');
+            if (selectionContainer) {
+                log('✓ Selection container found!');
+                log('Parent: ' + selectionContainer.parentElement.tagName + ' (' + selectionContainer.parentElement.className + ')');
+                log('Display: ' + getComputedStyle(selectionContainer).display);
+                log('Visibility: ' + getComputedStyle(selectionContainer).visibility);
+                log('Opacity: ' + getComputedStyle(selectionContainer).opacity);
+                log('Position: ' + getComputedStyle(selectionContainer).position);
+                log('Z-index: ' + getComputedStyle(selectionContainer).zIndex);
+                log('Children count: ' + selectionContainer.children.length);
+                
+                // Check if it's actually visible
+                const rect = selectionContainer.getBoundingClientRect();
+                log('Bounding rect: ' + JSON.stringify(rect));
+                
+                if (rect.width === 0 || rect.height === 0) {
+                    log('❌ Container has zero dimensions');
+                } else {
+                    log('✓ Container has dimensions');
+                }
+            } else {
+                log('❌ Selection container not found');
+            }
+        };
+        
+        window.checkAllContainers = function() {
+            clear();
+            log('=== Checking All Containers ===');
+            
+            const allDivs = document.querySelectorAll('div');
+            log('Total divs on page: ' + allDivs.length);
+            
+            const containers = document.querySelectorAll('[class*="container"]');
+            log('Elements with "container" in class: ' + containers.length);
+            
+            containers.forEach((container, i) => {
+                log(`${i+1}. ${container.tagName}.${container.className}`);
+            });
+            
+            // Check for any elements with location-related classes
+            const locationElements = document.querySelectorAll('[class*="location"]');
+            log('Elements with "location" in class: ' + locationElements.length);
+            
+            locationElements.forEach((el, i) => {
+                log(`${i+1}. ${el.tagName}.${el.className}`);
+            });
+        };
+    </script>
+</body>
+</html>

@@ -28,6 +28,8 @@ weekend.sg is a rule-based web application that helps users design customized we
 - **Profile_Card**: A clickable card UI element for selecting travel profile
 - **Duration_Card**: A clickable card UI element for selecting trip duration
 - **Segmented_Control**: A grouped button UI element for mutually exclusive options
+- **Mobile_Summary_View**: A screenshot-optimized layout displaying the itinerary in a compact, mobile-friendly format
+- **Print_Stylesheet**: CSS rules that format the page for printing
 
 ## Requirements
 
@@ -149,7 +151,54 @@ weekend.sg is a rule-based web application that helps users design customized we
 4. THE Application SHALL use responsive CSS units for layout dimensions
 5. THE Application SHALL ensure touch targets are at least 44px by 44px on mobile viewports
 
-### Requirement 9: Initial Implementation Scaffold
+### Requirement 9: Mobile Takeaway Features
+
+**User Story:** As a User, I want to save my itinerary for offline use during my trip, so that I can reference it on my mobile phone without internet access.
+
+#### Acceptance Criteria
+
+1. THE Results_Area SHALL display a "Save for Trip" button after itinerary generation
+2. WHEN the "Save for Trip" button is clicked, THE Application SHALL display a mobile-optimized summary view
+3. THE mobile-optimized summary view SHALL include the Rationale, all Location names, descriptions, and key details in a compact layout
+4. THE mobile-optimized summary view SHALL be optimized for mobile screenshots (single column, high contrast, readable text)
+5. THE Application SHALL include a print stylesheet that formats the itinerary for printing
+6. WHEN the User prints the page, THE print stylesheet SHALL hide the Preference_Panel and Interactive_Map
+7. WHEN the User prints the page, THE print stylesheet SHALL display only the Rationale and Itinerary in a clean, readable format
+8. THE print stylesheet SHALL use black text on white background for ink efficiency
+9. THE mobile-optimized summary view SHALL include a "Back to Planning" button to return to the main interface
+
+### Requirement 10: Enhanced Recommendation Selection
+
+**User Story:** As a User, I want to see all available options when there are many matching locations, so that I can choose which places to include in my itinerary based on my personal preferences and past visits.
+
+#### Acceptance Criteria
+
+1. WHEN the Recommendation_Engine finds more matching Locations than the duration limit, THE Application SHALL display all matching Locations in an "Available Options" section
+2. THE "Available Options" section SHALL display each Location as a selectable card with name, description, and tags
+3. EACH Location card in "Available Options" SHALL include a checkbox or toggle to include/exclude it from the final itinerary
+4. THE Application SHALL display a "Regenerate Itinerary" button when "Available Options" are shown
+5. WHEN the "Regenerate Itinerary" button is clicked, THE Application SHALL generate a new itinerary using only the selected Locations from "Available Options"
+6. THE Application SHALL respect the duration limits when regenerating (3 for half-day, 4 for 1-day, 7 for 2-days)
+7. IF the User selects fewer Locations than the duration limit, THE Application SHALL include all selected Locations
+8. IF the User selects more Locations than the duration limit, THE Application SHALL use the scoring system to select the top-rated Locations from the User's selection
+
+### Requirement 11: Visited Location Exclusion
+
+**User Story:** As a User, I want to exclude locations I've already visited, so that my itinerary only includes new places to explore.
+
+#### Acceptance Criteria
+
+1. THE Results_Area SHALL display each recommended Location with an "Already visited" checkbox or toggle
+2. WHEN a User marks a Location as "Already visited", THE Application SHALL visually indicate the Location is excluded (e.g., grayed out, strikethrough)
+3. THE Application SHALL display a "Regenerate Without Visited" button when any Locations are marked as visited
+4. WHEN the "Regenerate Without Visited" button is clicked, THE Application SHALL exclude all marked Locations from the available pool
+5. THE Application SHALL regenerate the itinerary using the remaining unvisited Locations
+6. THE Application SHALL maintain the User's original preferences (duration, profile, region, activities, weather) during regeneration
+7. IF excluding visited Locations results in insufficient options, THE Application SHALL display a message explaining the situation and suggest relaxing preferences
+8. THE "Already visited" state SHALL persist during the current session but reset when the page is refreshed
+9. THE Application SHALL allow Users to unmark "Already visited" Locations to include them back in the available pool
+
+### Requirement 12: Initial Implementation Scaffold
 
 **User Story:** As a developer, I want a basic working scaffold, so that I can validate the architecture before building complete functionality.
 

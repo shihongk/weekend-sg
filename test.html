@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekend.sg Unit Tests</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .test-result { margin: 10px 0; padding: 10px; }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { margin: 5px; padding: 10px 15px; }
+        #test-results { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Weekend.sg Unit Tests</h1>
+    
+    <div class="test-section">
+        <h2>Module Tests</h2>
+        <button onclick="testPreferenceManager()">Test PreferenceManager</button>
+        <button onclick="testRecommendationEngine()">Test RecommendationEngine</button>
+        <button onclick="testEnhancedEngine()">Test EnhancedRecommendationEngine</button>
+        <button onclick="testLocationSelection()">Test LocationSelectionManager</button>
+        <button onclick="testResultsRenderer()">Test ResultsRenderer</button>
+        <button onclick="runAllTests()">Run All Tests</button>
+    </div>
+
+    <div id="test-results"></div>
+
+    <script type="module">
+        import { PreferenceManager } from './scripts/ui/preferences.js';
+        import { RecommendationEngine } from './scripts/engine/recommender.js';
+        import { EnhancedRecommendationEngine } from './scripts/engine/enhanced-recommender.js';
+        import { LocationSelectionManager } from './scripts/ui/location-selection.js';
+        import { ResultsRenderer } from './scripts/ui/results.js';
+        import { RationaleGenerator } from './scripts/engine/rationale.js';
+        import { locations } from './scripts/data/locations.js';
+        import { rationaleTemplates } from './scripts/data/templates.js';
+
+        const results = document.getElementById('test-results');
+
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            results.appendChild(div);
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearResults() {
+            results.innerHTML = '';
+        }
+
+        // Test PreferenceManager
+        window.testPreferenceManager = function() {
+            clearResults();
+            log('Testing PreferenceManager...', 'info');
+            
+            try {
+                const pm = new PreferenceManager();
+                
+                // Test initial state
+                const initial = pm.getPreferences();
+                log(`Initial preferences: ${JSON.stringify(initial)}`, 'info');
+                
+                // Test setting duration
+                pm.setDuration('1-day');
+                log(`After setDuration('1-day'): ${pm.getPreferences().duration}`, 'info');
+                
+                // Test setting profile
+                pm.setProfile('couple');
+                log(`After setProfile('couple'): ${pm.getPreferences().profile}`, 'info');
+                
+                // Test validation
+                const isValid = pm.isValid();
+                log(`Validation result: ${isValid}`, isValid ? 'pass' : 'fail');
+                
+                // Test region toggle
+                pm.toggleRegion('central');
+                log(`After toggleRegion('central'): ${JSON.stringify(pm.getPreferences().regions)}`, 'info');
+                
+                log('PreferenceManager tests completed', 'pass');
+            } catch (error) {
+                log(`PreferenceManager test failed: ${error.message}`, 'fail');
+                console.error(error);
+            }
+        };
+
+        // Test RecommendationEngine
+        window.testRecommendationEngine = function() {
+            clearResults();
+            log('Testing RecommendationEngine...', 'info');
+            
+            try {
+                const engine = new RecommendationEngine(locations);
+                log(`Loaded ${locations.length} locations`, 'info');
+                
+                // Test with sample preferences
+                const preferences = {
+                    duration: '1-day',
+                    profile: 'couple',
+                    regions: ['central'],
+                    activities: ['culture', 'local_food'],
+                    weather: 'any'
+                };
+                
+                log(`Testing with preferences: ${JSON.stringify(preferences)}`, 'info');
+                
+                const itinerary = engine.generateItinerary(preferences);
+                log(`Generated itinerary with ${itinerary.length} locations`, 'info');
+                
+                if (itinerary.length > 0) {
+                    log(`First location: ${itinerary[0].name}`, 'info');
+                    log('RecommendationEngine tests completed', 'pass');
+                } else {
+                    log('No locations generated - this might be the issue!', 'fail');
+                }
+                
+            } catch (error) {
+                log(`RecommendationEngine test failed: ${error.message}`, 'fail');
+                console.error(error);
+            }
+        };
+
+        // Test EnhancedRecommendationEngine
+        window.testEnhancedEngine = function() {
+            clearResults();
+            log('Testing EnhancedRecommendationEngine...', 'info');
+            
+            try {
+                const selectionManager = new LocationSelectionManager();
+                const engine = new EnhancedRecommendationEngine(locations, selectionManager);
+                
+                const preferences = {
+                    duration: '1-day',
+                    profile: 'couple',
+                    regions: ['central'],
+                    activities: ['culture', 'local_food'],
+                    weather: 'any'
+                };
+                
+                log(`Testing enhanced engine with preferences: ${JSON.stringify(preferences)}`, 'info');
+                
+                const result = engine.generateEnhancedItinerary(preferences);
+                log(`Enhanced result type: ${result.type}`, 'info');
+                log(`Enhanced result: ${JSON.stringify(result, null, 2)}`, 'info');
+                
+                if (result.type === 'selection_required') {
+                    log(`Selection required: ${result.availableCount} matches, limit ${result.limit}`, 'pass');
+                } else if (result.type === 'standard') {
+                    log(`Standard result: ${result.itinerary.length} locations`, 'pass');
+                } else {
+                    log(`Unexpected result type: ${result.type}`, 'fail');
+                }
+                
+            } catch (error) {
+                log(`EnhancedRecommendationEngine test failed: ${error.message}`, 'fail');
+                console.error(error);
+            }
+        };
+
+        // Test LocationSelectionManager
+        window.testLocationSelection = function() {
+            clearResults();
+            log('Testing LocationSelectionManager...', 'info');
+            
+            try {
+                const manager = new LocationSelectionManager();
+                
+                // Test basic functionality
+                log(`Initial visited locations: ${manager.visitedLocations.size}`, 'info');
+                
+                // Test unvisited locations
+                const unvisited = manager.getUnvisitedLocations(locations);
+                log(`Unvisited locations: ${unvisited.length}/${locations.length}`, 'info');
+                
+                // Test marking as visited
+                manager.markAsVisited('test_location');
+                log(`After marking test_location as visited: ${manager.visitedLocations.size}`, 'info');
+                
+                // Test selection interface (without DOM)
+                const testMatches = locations.slice(0, 10);
+                const testPrefs = { duration: '1-day' };
+                
+                // This should not crash
+                manager.showLocationSelection(testMatches, testPrefs, 4);
+                log('LocationSelectionManager basic tests completed', 'pass');
+                
+            } catch (error) {
+                log(`LocationSelectionManager test failed: ${error.message}`, 'fail');
+                console.error(error);
+            }
+        };
+
+        // Test ResultsRenderer
+        window.testResultsRenderer = function() {
+            clearResults();
+            log('Testing ResultsRenderer...', 'info');
+            
+            try {
+                // Create a test container
+                const testContainer = document.createElement('div');
+                testContainer.id = 'test-container';
+                document.body.appendChild(testContainer);
+                
+                const renderer = new ResultsRenderer(testContainer);
+                
+                // Test rendering
+                const testLocations = locations.slice(0, 3);
+                const testRationale = "Test rationale text";
+                
+                renderer.render(testRationale, testLocations, '1-day');
+                
+                log(`Rendered ${testContainer.children.length} elements`, 'info');
+                log('ResultsRenderer tests completed', 'pass');
+                
+                // Clean up
+                testContainer.remove();
+                
+            } catch (error) {
+                log(`ResultsRenderer test failed: ${error.message}`, 'fail');
+                console.error(error);
+            }
+        };
+
+        // Run all tests
+        window.runAllTests = function() {
+            clearResults();
+            log('Running all tests...', 'info');
+            
+            testPreferenceManager();
+            setTimeout(() => testRecommendationEngine(), 100);
+            setTimeout(() => testEnhancedEngine(), 200);
+            setTimeout(() => testLocationSelection(), 300);
+            setTimeout(() => testResultsRenderer(), 400);
+        };
+
+        // Test data integrity
+        log('Checking data integrity...', 'info');
+        log(`Total locations loaded: ${locations.length}`, 'info');
+        
+        if (locations.length > 0) {
+            const sample = locations[0];
+            log(`Sample location structure: ${JSON.stringify(Object.keys(sample))}`, 'info');
+            log(`Sample location: ${sample.name} in ${sample.region}`, 'info');
+        }
+    </script>
+</body>
+</html>

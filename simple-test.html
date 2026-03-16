@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test</title>
+</head>
+<body>
+    <h1>Simple Test</h1>
+    <div id="output"></div>
+    
+    <script type="module">
+        import { RecommendationEngine } from './scripts/engine/recommender.js';
+        import { locations } from './scripts/data/locations.js';
+        
+        const output = document.getElementById('output');
+        
+        function log(msg) {
+            output.innerHTML += '<div>' + msg + '</div>';
+            console.log(msg);
+        }
+        
+        log('Starting simple test...');
+        log('Total locations: ' + locations.length);
+        
+        const engine = new RecommendationEngine(locations);
+        
+        // Test with very basic preferences
+        const prefs = {
+            duration: '1-day',
+            profile: 'couple',
+            regions: [],  // No region filter
+            activities: [], // No activity filter
+            weather: 'anything'
+        };
+        
+        log('Testing with: ' + JSON.stringify(prefs));
+        
+        // Step by step
+        const step1 = engine.filterByProfile(prefs.profile);
+        log('After profile filter (couple): ' + step1.length + ' locations');
+        
+        if (step1.length > 0) {
+            log('First match: ' + step1[0].name + ' - profiles: ' + JSON.stringify(step1[0].compatible_profiles));
+        }
+        
+        const step2 = engine.filterByWeather(step1, prefs.weather);
+        log('After weather filter (anything): ' + step2.length + ' locations');
+        
+        if (step2.length > 0) {
+            log('First match: ' + step2[0].name + ' - weather: ' + step2[0].weather_suitability);
+        }
+        
+        const final = engine.generateItinerary(prefs);
+        log('Final result: ' + final.length + ' locations');
+        
+        if (final.length > 0) {
+            log('SUCCESS: Generated itinerary with ' + final.length + ' locations');
+            final.forEach((loc, i) => {
+                log(`${i+1}. ${loc.name} (${loc.region})`);
+            });
+        } else {
+            log('PROBLEM: No locations in final result');
+        }
+    </script>
+</body>
+</html>
